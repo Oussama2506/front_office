@@ -1,0 +1,40 @@
+<!-- Announcement Bar -->
+<div class="announcement">
+  🌿 Free Weight Loss Starter Kit with any newsletter signup &mdash;
+  <a (click)="scrollTo('newsletter')">Get yours &rarr;</a>
+</div>
+
+<!-- Navigation -->
+<nav [class.nav--scrolled]="scrolled">
+  <div class="nav-inner container">
+    <div class="nav-logo">Nourish <span>&</span> Bloom</div>
+
+    <ul class="nav-links" [class.nav-links--open]="menuOpen">
+      <li *ngFor="let link of navLinks">
+        <a (click)="scrollTo(link.anchor)">{{ link.label }}</a>
+      </li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="nav-search" (click)="toastService.show('🔍 Search coming soon!')">🔍</button>
+      <button class="btn-nav" (click)="openModal()">Free Starter Kit</button>
+      <button class="hamburger" (click)="toggleMenu()">{{ menuOpen ? '✕' : '☰' }}</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Free Kit Modal -->
+<div class="modal-overlay" [class.modal-overlay--open]="modalOpen" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="closeModal()">✕</button>
+    <div class="modal-emoji">🎁</div>
+    <h2>Your Free <em>Starter Kit</em> Awaits</h2>
+    <p>Enter your email to instantly receive your 7-Day Clean Eating Meal Plan and recipe ebook.</p>
+    <div class="modal-form">
+      <input type="text" [(ngModel)]="modalName" placeholder="First name" />
+      <input type="email" [(ngModel)]="modalEmail" placeholder="Email address" />
+      <button class="btn-primary" (click)="handleSignup()">Send My Free Kit &rarr;</button>
+    </div>
+    <p class="modal-legal">No spam, ever. Unsubscribe anytime.</p>
+  </div>
+</div>

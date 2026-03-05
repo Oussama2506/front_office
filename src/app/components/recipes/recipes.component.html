@@ -1,0 +1,58 @@
+<section class="recipes-section" id="recipes">
+  <div class="container">
+
+    <div class="recipes-header">
+      <div>
+        <div class="section-label">Fresh &amp; Delicious</div>
+        <h2 class="section-title">Latest <em>Recipes</em></h2>
+        <div class="recipe-filters">
+          <button class="filter-btn"
+                  *ngFor="let f of filters"
+                  [class.filter-btn--active]="activeFilter === f.value"
+                  (click)="setFilter(f.value)">
+            {{ f.label }}
+          </button>
+        </div>
+      </div>
+      <button class="btn-outline" (click)="toastService.show('🍽️ Loading all recipes…')">View All &rarr;</button>
+    </div>
+
+    <div class="recipes-grid" *ngIf="filteredRecipes.length; else noResults">
+      <div class="recipe-card"
+           *ngFor="let recipe of filteredRecipes"
+           [class.recipe-card--featured]="recipe.featured && activeFilter === 'all'"
+           (click)="openRecipe(recipe)">
+
+        <div class="recipe-img" [style.background]="recipe.bgGradient">
+          <span class="recipe-emoji">{{ recipe.emoji }}</span>
+          <div class="recipe-img-overlay"></div>
+          <span class="recipe-tag">{{ recipe.tag }}</span>
+        </div>
+
+        <div class="recipe-body">
+          <div class="recipe-meta">
+            <span>🕐 {{ recipe.timeMinutes }} min</span>
+            <span>🔥 {{ recipe.calories }} kcal</span>
+            <span>👤 {{ recipe.servings }} serv.</span>
+          </div>
+          <h3 class="recipe-title">{{ recipe.title }}</h3>
+          <p class="recipe-desc">{{ recipe.description }}</p>
+          <div class="recipe-macros">
+            <span class="macro-pill"><strong>{{ recipe.macros.protein }}g</strong> protein</span>
+            <span class="macro-pill"><strong>{{ recipe.macros.carbs }}g</strong> carbs</span>
+            <span class="macro-pill" *ngFor="let b of recipe.badges">{{ b }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noResults>
+      <div class="no-results">
+        <span>🍽️</span>
+        <p>No recipes in this category yet.</p>
+        <button class="btn-outline" (click)="setFilter('all')">Show All</button>
+      </div>
+    </ng-template>
+
+  </div>
+</section>

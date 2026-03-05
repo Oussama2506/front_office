@@ -1,0 +1,70 @@
+<section class="hero" id="home">
+  <div class="hero-bg-circle"></div>
+  <div class="hero-leaf hero-leaf--1">🌿</div>
+  <div class="hero-leaf hero-leaf--2">🌱</div>
+
+  <div class="container">
+    <div class="hero-inner">
+
+      <!-- Text -->
+      <div class="hero-text">
+        <div class="hero-eyebrow fade-up">Clean Eating · Nutrition · Wellness</div>
+        <h1 class="hero-title fade-up-2">
+          On Your Way to a<br/>
+          <em>Healthier</em>
+          <span class="hero-title__script">You</span>
+        </h1>
+        <p class="hero-desc fade-up-3">
+          Delicious, dietitian-approved recipes and personalized meal plans that make
+          clean eating simple, satisfying, and sustainable — for real life.
+        </p>
+        <div class="hero-actions fade-up-4">
+          <button class="btn-primary" (click)="scrollTo('newsletter')">
+            🎁 Get Free Starter Kit
+          </button>
+          <button class="btn-outline" (click)="scrollTo('recipes')">
+            Browse Recipes
+          </button>
+        </div>
+        <div class="hero-trust fade-up-4">
+          <div class="trust-dots">
+            <span class="trust-dot trust-dot--accent"></span>
+            <span class="trust-dot"></span>
+            <span class="trust-dot"></span>
+            <span class="trust-dot"></span>
+            <span class="trust-dot"></span>
+          </div>
+          Trusted by <strong>240,000+</strong> readers worldwide
+        </div>
+      </div>
+
+      <!-- Visual -->
+      <div class="hero-visual fade-up-3">
+        <div class="hero-frame">
+          <div class="food-collage">
+            <div class="food-cell"
+                 *ngFor="let cell of foodCells"
+                 [style.background]="cell.bg">
+              {{ cell.emoji }}
+            </div>
+          </div>
+        </div>
+        <div class="hero-badge hero-badge--1">
+          <span class="badge-icon">🏆</span>
+          <div class="badge-body">
+            <strong>Award Winning</strong>
+            <span>Best Nutrition Blog 2024</span>
+          </div>
+        </div>
+        <div class="hero-badge hero-badge--2">
+          <span class="badge-icon">⭐</span>
+          <div class="badge-body">
+            <strong>4.9 / 5.0</strong>
+            <span>Reader Rating</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

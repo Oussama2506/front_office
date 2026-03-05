@@ -1,0 +1,33 @@
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+
+      <div class="footer-brand">
+        <div class="footer-logo">Nourish <span>&</span> Bloom</div>
+        <p>Helping you eat well and live fully — with real food, real science, and real community since 2018.</p>
+        <div class="footer-socials">
+          <button class="social-btn" *ngFor="let s of socials" (click)="toastService.show(s.msg)">{{ s.icon }}</button>
+        </div>
+      </div>
+
+      <div class="footer-col" *ngFor="let col of columns">
+        <h4>{{ col.heading }}</h4>
+        <ul>
+          <li *ngFor="let link of col.links">
+            <a (click)="toastService.show('🔗 Opening: ' + link)">{{ link }}</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; {{ currentYear }} Nourish &amp; Bloom. All rights reserved.</span>
+      <div class="footer-legal">
+        <a (click)="toastService.show('📄 Privacy Policy')">Privacy Policy</a>
+        <a (click)="toastService.show('📄 Terms of Use')">Terms of Use</a>
+        <a (click)="toastService.show('🍪 Cookie Settings')">Cookie Settings</a>
+      </div>
+    </div>
+  </div>
+</footer>
