@@ -21,6 +21,7 @@ export class NavbarComponent {
     { label: 'Articles',   anchor: 'blog'       },
     { label: 'Calculator', anchor: 'calculator' },
     { label: 'About',      anchor: 'about'      },
+    { label: 'Dossier',    route: '/dossier'    },
   ];
 
   constructor(public toastService: ToastService) {}

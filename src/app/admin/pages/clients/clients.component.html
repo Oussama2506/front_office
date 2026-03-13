@@ -12,6 +12,7 @@
       />
       <button class="search-clear" *ngIf="searchQuery" (click)="searchQuery = ''; applyFilters()">✕</button>
     </div>
+    
 
     <div class="status-filters">
       <button class="status-btn"
@@ -75,6 +76,7 @@
 
       <div class="client-actions">
         <button class="btn-view" (click)="viewClient(client)">View Profile</button>
+        <button class="btn-dossier" (click)="openDossier(client)">🗂 Dossier</button>
         <button class="btn-plan" (click)="openMealPlan(client)">Meal Plan</button>
       </div>
     </div>
@@ -85,6 +87,8 @@
       <div class="add-icon">+</div>
       <p>Add New Client</p>
     </div>
+
+
 
   </div>
 </div>

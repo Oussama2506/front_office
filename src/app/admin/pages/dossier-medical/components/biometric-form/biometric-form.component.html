@@ -1,0 +1,78 @@
+<div class="bio-form-page">
+  <div class="bio-form-card">
+    <h3>Add Biometric Entry</h3>
+    <p class="form-subtitle">Record a new measurement for this patient's medical file.</p>
+
+    <!-- BMI Live Preview -->
+    <div class="bmi-preview" *ngIf="bmi > 0">
+      <div class="bmi-preview-inner">
+        <span class="bmi-value" [style.color]="bmiColor">{{ bmi }}</span>
+        <div>
+          <strong>BMI</strong>
+          <span class="bmi-cat" [style.background]="bmiColor + '18'" [style.color]="bmiColor">
+            {{ bmiLabel }}
+          </span>
+        </div>
+      </div>
+      <p>Automatically calculated from weight and height</p>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">📏 Body Measurements</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Weight (kg) *</label>
+          <input type="number" [(ngModel)]="weight" (ngModelChange)="onWeightOrHeightChange()" placeholder="e.g. 74"/>
+        </div>
+        <div class="form-group">
+          <label>Height (cm) *</label>
+          <input type="number" [(ngModel)]="height" (ngModelChange)="onWeightOrHeightChange()" placeholder="e.g. 165"/>
+        </div>
+        <div class="form-group">
+          <label>Body Fat (%)</label>
+          <input type="number" [(ngModel)]="bodyFat" placeholder="e.g. 28"/>
+        </div>
+        <div class="form-group">
+          <label>Muscle Mass (kg)</label>
+          <input type="number" [(ngModel)]="muscleMass" placeholder="e.g. 46"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">❤️ Cardiovascular</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Systolic BP (mmHg)</label>
+          <input type="number" [(ngModel)]="systolic" placeholder="e.g. 120"/>
+        </div>
+        <div class="form-group">
+          <label>Diastolic BP (mmHg)</label>
+          <input type="number" [(ngModel)]="diastolic" placeholder="e.g. 80"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">🩸 Metabolic</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Fasting Glucose (mg/dL)</label>
+          <input type="number" [(ngModel)]="glucose" placeholder="e.g. 90"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">📋 Notes</div>
+      <div class="form-group form-group--full">
+        <textarea [(ngModel)]="notes" rows="3" placeholder="Clinician notes for this measurement…"></textarea>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-reset" (click)="reset()">Clear</button>
+      <button class="btn-submit" (click)="submit()">Save Entry ✓</button>
+    </div>
+  </div>
+</div>

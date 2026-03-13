@@ -71,10 +71,19 @@ export class TopbarComponent implements OnInit {
     });
   }
 
-  updatePage(url: string): void {
-    this.pageTitle  = this.titleMap[url]  ?? 'Dashboard';
-    this.quickStats = this.statsMap[url]  ?? [];
+updatePage(url: string): void {
+  if (url.startsWith('/admin/dossier/')) {
+    this.pageTitle  = 'Medical Record';
+    this.quickStats = [
+      { icon: '📊', label: 'Module',    value: 'Dossier'  },
+      { icon: '🔒', label: 'Access',    value: 'Secure'   },
+      { icon: '⚕️', label: 'Standard',  value: 'HIPAA'    },
+    ];
+    return;
   }
+  this.pageTitle  = this.titleMap[url]  ?? 'Dashboard';
+  this.quickStats = this.statsMap[url]  ?? [];
+}
 
   setDate(): void {
     const now = new Date();
@@ -98,4 +107,5 @@ export class TopbarComponent implements OnInit {
     this.closeNewClient();
     this.newClientName = '';
   }
+  
 }

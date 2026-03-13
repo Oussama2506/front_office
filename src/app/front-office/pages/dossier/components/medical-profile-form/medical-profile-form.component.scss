@@ -1,0 +1,83 @@
+.profile-form { display: flex; flex-direction: column; align-items: center; }
+
+.form-card {
+  background: #fff; border: 1px solid #ede8e3; border-radius: 20px;
+  padding: 36px; width: 100%; max-width: 760px;
+}
+
+.form-card-header {
+  margin-bottom: 32px;
+  h3 { font-family: var(--font-serif); font-size: 28px; font-weight: 600; color: #1e1a16; margin-bottom: 6px; }
+  p  { font-size: 14px; color: #8a7e78; line-height: 1.6; }
+}
+
+.form-section { margin-bottom: 30px; }
+
+.form-section-label {
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: #c5bdb7; font-weight: 700; margin-bottom: 16px;
+  padding-bottom: 10px; border-bottom: 1px solid #f5f1ed;
+}
+
+.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.field-group {
+  display: flex; flex-direction: column; gap: 7px;
+  &--full { grid-column: 1 / -1; }
+  label {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: #8a7e78; font-weight: 700;
+  }
+  input, select {
+    border: 1.5px solid #ede8e3; border-radius: 10px; padding: 12px 14px;
+    font-size: 14px; font-family: var(--font-sans); outline: none;
+    background: #faf7f4; transition: border-color 0.2s;
+    &:focus { border-color: var(--terracotta); background: #fff; }
+  }
+}
+
+.tag-input-row {
+  display: flex; gap: 10px; margin-bottom: 12px;
+  input {
+    flex: 1; border: 1.5px solid #ede8e3; border-radius: 10px; padding: 11px 14px;
+    font-size: 14px; font-family: var(--font-sans); outline: none; background: #faf7f4;
+    &:focus { border-color: var(--terracotta); background: #fff; }
+  }
+}
+
+.btn-add-tag {
+  background: var(--terracotta); color: #fff; border: none;
+  border-radius: 10px; padding: 11px 18px;
+  font-family: var(--font-sans); font-size: 13px; font-weight: 600;
+  cursor: pointer; white-space: nowrap; transition: all 0.2s;
+  &:hover { background: var(--terracotta-dark); }
+}
+
+.tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.tag {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 12px 5px 14px; border-radius: 100px;
+  font-size: 13px; font-weight: 500;
+
+  button {
+    background: none; border: none; cursor: pointer; font-size: 15px;
+    line-height: 1; padding: 0; opacity: 0.6; transition: opacity 0.2s;
+    &:hover { opacity: 1; }
+  }
+
+  &--allergy   { background: rgba(201,106,63,0.1);   color: #a85430; button { color: #a85430; } }
+  &--condition { background: rgba(164,124,240,0.1);  color: #7a4eb0; button { color: #7a4eb0; } }
+  &--medication{ background: rgba(122,158,126,0.1);  color: #4a7a4e; button { color: #4a7a4e; } }
+}
+
+.form-actions { display: flex; justify-content: flex-end; padding-top: 20px; border-top: 1px solid #f5f1ed; }
+
+.btn-save {
+  background: linear-gradient(135deg, var(--terracotta), var(--terracotta-light));
+  color: #fff; border: none; border-radius: 100px; padding: 13px 32px;
+  font-family: var(--font-sans); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(201,106,63,0.3);
+  &:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,106,63,0.4); }
+}

@@ -1,0 +1,86 @@
+<div class="dossier-page" *ngIf="client">
+
+  <!-- Header -->
+  <div class="dossier-header">
+    <div class="dossier-header-left">
+      <button class="back-btn" (click)="goBack()">← Clients</button>
+      <div class="client-identity">
+        <div class="dossier-avatar" [style.background]="client.avatarColor">
+          {{ client.initials }}
+        </div>
+        <div class="client-meta">
+          <h2>{{ client.name }}</h2>
+          <div class="client-tags">
+            <span class="tag">{{ client.age }} y/o {{ client.gender }}</span>
+            <span class="tag">🎯 {{ client.goal }}</span>
+            <span class="tag">🩸 {{ client.bloodType }}</span>
+            <span class="tag tag--doctor">👩‍⚕️ {{ client.assignedNutritionist }}</span>
+          </div>
+          <div class="client-flags">
+            <span class="condition-tag" *ngFor="let c of client.conditions">⚕️ {{ c }}</span>
+            <span class="allergy-tag" *ngFor="let a of client.allergies">⚠️ {{ a }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dossier-header-actions">
+      <button class="btn-print" (click)="printDossier()">🖨️ Print</button>
+      <button class="btn-export" (click)="exportPDF()">📄 Export PDF</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="dossier-tabs">
+    <button class="dossier-tab"
+            *ngFor="let tab of tabs"
+            [class.dossier-tab--active]="activeTab === tab.value"
+            (click)="activeTab = tab.value">
+      {{ tab.label }}
+    </button>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="dossier-content">
+    <app-health-dashboard    *ngIf="activeTab === 'dashboard'"  [clientId]="client.id"></app-health-dashboard>
+    <app-biometric-charts    *ngIf="activeTab === 'charts'"     [clientId]="client.id"></app-biometric-charts>
+    <app-alerts-panel        *ngIf="activeTab === 'alerts'"     [clientId]="client.id"></app-alerts-panel>
+    <app-consultation-notes  *ngIf="activeTab === 'notes'"      [clientId]="client.id"></app-consultation-notes>
+    <app-biometric-form      *ngIf="activeTab === 'add'"        [clientId]="client.id"></app-biometric-form>
+
+    <!-- Biometric History Table -->
+    <div class="history-card" *ngIf="activeTab === 'biometrics'">
+      <div class="history-header">
+        <h3>Biometric History</h3>
+      </div>
+      <div class="history-table-wrap">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Date</th><th>Weight</th><th>BMI</th><th>Body Fat</th>
+              <th>Muscle</th><th>BP</th><th>Glucose</th><th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let entry of getEntries()">
+              <td><strong>{{ entry.date }}</strong></td>
+              <td>{{ entry.weight }} kg</td>
+              <td>
+                <span class="bmi-pill" [style.background]="getBMIColor(entry.bmi) + '18'"
+                      [style.color]="getBMIColor(entry.bmi)">
+                  {{ entry.bmi }}
+                </span>
+              </td>
+              <td>{{ entry.bodyFat ?? '—' }}{{ entry.bodyFat ? '%' : '' }}</td>
+              <td>{{ entry.muscleMass ?? '—' }}{{ entry.muscleMass ? ' kg' : '' }}</td>
+              <td>{{ entry.systolic }}/{{ entry.diastolic }} mmHg</td>
+              <td>{{ entry.glucose ?? '—' }}{{ entry.glucose ? ' mg/dL' : '' }}</td>
+              <td class="notes-cell">{{ entry.notes }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+</div>

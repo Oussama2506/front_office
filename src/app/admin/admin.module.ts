@@ -13,6 +13,12 @@ import { MealPlansAdminComponent } from './pages/meal-plans-admin/meal-plans-adm
 import { ScheduleComponent } from './pages/schedule/schedule.component';
 import { ReportsComponent } from './pages/reports/reports.component';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { DossierShellComponent } from './pages/dossier-medical/dossier-shell/dossier-shell.component';
+import { BiometricFormComponent } from './pages/dossier-medical/components/biometric-form/biometric-form.component';
+import { HealthDashboardComponent } from './pages/dossier-medical/components/health-dashboard/health-dashboard.component';
+import { BiometricChartsComponent } from './pages/dossier-medical/components/biometric-charts/biometric-charts.component';
+import { AlertsPanelComponent } from './pages/dossier-medical/components/alerts-panel/alerts-panel.component';
+import { ConsultationNotesComponent } from './pages/dossier-medical/components/consultation-notes/consultation-notes.component';
 
 @NgModule({
   declarations: [
@@ -25,11 +31,17 @@ import { SettingsComponent } from './pages/settings/settings.component';
     ScheduleComponent,
     ReportsComponent,
     SettingsComponent,
+    DossierShellComponent,
+    BiometricFormComponent,
+    HealthDashboardComponent,
+    BiometricChartsComponent,
+    AlertsPanelComponent,
+    ConsultationNotesComponent,
   ],
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule,        // ← add this
+    RouterModule,
     AdminRoutingModule,
   ]
 })

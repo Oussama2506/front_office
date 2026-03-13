@@ -1,0 +1,48 @@
+<div class="notes-page">
+
+  <div class="notes-empty" *ngIf="notes.length === 0">
+    <span>📝</span>
+    <p>No consultation notes recorded yet.</p>
+  </div>
+
+  <div class="note-item" *ngFor="let note of notes" [class.note-item--open]="expanded === note.id">
+    <div class="note-header" (click)="toggle(note.id)">
+      <div class="note-header-left">
+        <span class="note-type-dot" [style.background]="typeColor(note.type)"></span>
+        <div class="note-meta">
+          <strong>{{ note.type }}</strong>
+          <span>{{ note.date }} · {{ note.nutritionist }}</span>
+        </div>
+      </div>
+      <div class="note-header-right">
+        <span class="note-type-badge"
+              [style.background]="typeColor(note.type) + '18'"
+              [style.color]="typeColor(note.type)">
+          {{ note.type }}
+        </span>
+        <span class="note-toggle">{{ expanded === note.id ? '▲' : '▼' }}</span>
+      </div>
+    </div>
+
+    <div class="note-body" *ngIf="expanded === note.id">
+      <div class="note-summary">
+        <h4>Summary</h4>
+        <p>{{ note.summary }}</p>
+      </div>
+
+      <div class="note-recommendations">
+        <h4>Recommendations</h4>
+        <ul>
+          <li *ngFor="let rec of note.recommendations">
+            <span class="rec-check">✓</span> {{ rec }}
+          </li>
+        </ul>
+      </div>
+
+      <div class="note-footer">
+        <span>📅 Next appointment: <strong>{{ note.nextAppointment }}</strong></span>
+      </div>
+    </div>
+  </div>
+
+</div>

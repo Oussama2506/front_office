@@ -9,16 +9,28 @@
   <div class="nav-inner container">
     <div class="nav-logo">Nourish <span>&</span> Bloom</div>
 
-    <ul class="nav-links" [class.nav-links--open]="menuOpen">
-      <li *ngFor="let link of navLinks">
-        <a (click)="scrollTo(link.anchor)">{{ link.label }}</a>
-      </li>
-    </ul>
+    <ng-container *ngFor="let link of navLinks">
+  <!-- Internal route link -->
+  <a *ngIf="link.route"
+     [routerLink]="link.route"
+     class="nav-link">
+    {{ link.label }}
+  </a>
+
+  <!-- Scroll anchor link -->
+  <a *ngIf="link.anchor"
+     (click)="scrollTo(link.anchor!)"
+     class="nav-link"
+     style="cursor: pointer;">
+    {{ link.label }}
+  </a>
+</ng-container>
 
     <div class="nav-actions">
       <button class="nav-search" (click)="toastService.show('🔍 Search coming soon!')">🔍</button>
       <button class="btn-nav" (click)="openModal()">Free Starter Kit</button>
       <button class="hamburger" (click)="toggleMenu()">{{ menuOpen ? '✕' : '☰' }}</button>
+      
     </div>
   </div>
 </nav>

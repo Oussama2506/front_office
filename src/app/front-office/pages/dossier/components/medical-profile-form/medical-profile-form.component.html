@@ -1,0 +1,100 @@
+<div class="profile-form">
+  <div class="form-card">
+    <div class="form-card-header">
+      <h3>Medical Profile</h3>
+      <p>This information helps your nutritionist provide better care. Fields marked * are required.</p>
+    </div>
+
+    <!-- Personal Info -->
+    <div class="form-section">
+      <div class="form-section-label">👤 Personal Information</div>
+      <div class="form-grid-2">
+        <div class="field-group">
+          <label>First Name *</label>
+          <input type="text" [(ngModel)]="profile.firstName" placeholder="Jane"/>
+        </div>
+        <div class="field-group">
+          <label>Last Name *</label>
+          <input type="text" [(ngModel)]="profile.lastName" placeholder="Smith"/>
+        </div>
+        <div class="field-group">
+          <label>Date of Birth *</label>
+          <input type="date" [(ngModel)]="profile.dob"/>
+        </div>
+        <div class="field-group">
+          <label>Gender *</label>
+          <select [(ngModel)]="profile.gender">
+            <option value="">Select…</option>
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Blood Type *</label>
+          <select [(ngModel)]="profile.bloodType">
+            <option value="">Select…</option>
+            <option *ngFor="let bt of bloodTypes">{{ bt }}</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Height (cm) *</label>
+          <input type="number" [(ngModel)]="profile.height" placeholder="165"/>
+        </div>
+        <div class="field-group field-group--full">
+          <label>Emergency Contact</label>
+          <input type="text" [(ngModel)]="profile.emergencyContact" placeholder="Name — Phone number"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Allergies -->
+    <div class="form-section">
+      <div class="form-section-label">⚠️ Allergies</div>
+      <div class="tag-input-row">
+        <input type="text" [(ngModel)]="newAllergy" placeholder="e.g. Gluten, Lactose, Nuts…"
+               (keyup.enter)="addAllergy()"/>
+        <button class="btn-add-tag" (click)="addAllergy()">+ Add</button>
+      </div>
+      <div class="tag-list" *ngIf="profile.allergies.length > 0">
+        <span class="tag tag--allergy" *ngFor="let a of profile.allergies; let i = index">
+          {{ a }} <button (click)="removeAllergy(i)">×</button>
+        </span>
+      </div>
+    </div>
+
+    <!-- Conditions -->
+    <div class="form-section">
+      <div class="form-section-label">⚕️ Medical Conditions</div>
+      <div class="tag-input-row">
+        <input type="text" [(ngModel)]="newCondition" placeholder="e.g. Type 2 Diabetes, Hypertension…"
+               (keyup.enter)="addCondition()"/>
+        <button class="btn-add-tag" (click)="addCondition()">+ Add</button>
+      </div>
+      <div class="tag-list" *ngIf="profile.conditions.length > 0">
+        <span class="tag tag--condition" *ngFor="let c of profile.conditions; let i = index">
+          {{ c }} <button (click)="removeCondition(i)">×</button>
+        </span>
+      </div>
+    </div>
+
+    <!-- Medications -->
+    <div class="form-section">
+      <div class="form-section-label">💊 Current Medications</div>
+      <div class="tag-input-row">
+        <input type="text" [(ngModel)]="newMedication" placeholder="e.g. Metformin 500mg…"
+               (keyup.enter)="addMedication()"/>
+        <button class="btn-add-tag" (click)="addMedication()">+ Add</button>
+      </div>
+      <div class="tag-list" *ngIf="profile.medications.length > 0">
+        <span class="tag tag--medication" *ngFor="let m of profile.medications; let i = index">
+          {{ m }} <button (click)="removeMedication(i)">×</button>
+        </span>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-save" (click)="save()">Save Medical Profile ✓</button>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AdminDataService, Client } from '../../services/admin-data.service';
 import { ToastService } from '../../../shared/services/toast.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-clients',
@@ -15,7 +16,7 @@ export class ClientsComponent {
 
   statusFilters = ['all', 'active', 'inactive', 'waitlist'];
 
-  constructor(private adminData: AdminDataService, public toastService: ToastService) {
+  constructor(private adminData: AdminDataService, public toastService: ToastService, private router: Router) {
     this.allClients      = this.adminData.clients;
     this.filteredClients = this.allClients;
   }
@@ -63,4 +64,7 @@ export class ClientsComponent {
   openMealPlan(client: Client): void {
     this.toastService.show(`📋 Opening meal plan for: ${client.name}`);
   }
+  openDossier(client: Client): void {
+  this.router.navigate(['/admin/dossier', client.id]);
+}
 }

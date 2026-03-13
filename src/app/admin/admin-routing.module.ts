@@ -7,19 +7,21 @@ import { MealPlansAdminComponent } from './pages/meal-plans-admin/meal-plans-adm
 import { ScheduleComponent } from './pages/schedule/schedule.component';
 import { ReportsComponent } from './pages/reports/reports.component';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { DossierShellComponent } from './pages/dossier-medical/dossier-shell/dossier-shell.component';
 
 const routes: Routes = [
   {
     path: '',
     component: AdminShellComponent,
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard',  component: DashboardComponent },
-      { path: 'clients',    component: ClientsComponent },
-      { path: 'meal-plans', component: MealPlansAdminComponent },
-      { path: 'schedule',   component: ScheduleComponent },
-      { path: 'reports',    component: ReportsComponent },
-      { path: 'settings',   component: SettingsComponent },
+      { path: '',            redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard',   component: DashboardComponent },
+      { path: 'clients',     component: ClientsComponent },
+      { path: 'meal-plans',  component: MealPlansAdminComponent },
+      { path: 'schedule',    component: ScheduleComponent },
+      { path: 'reports',     component: ReportsComponent },
+      { path: 'settings',    component: SettingsComponent },
+      { path: 'dossier/:id', component: DossierShellComponent },  // ← add this
     ]
   }
 ];
