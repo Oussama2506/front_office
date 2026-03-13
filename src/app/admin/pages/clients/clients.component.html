@@ -1,0 +1,90 @@
+<div class="clients-page">
+
+  <!-- Search & Filter Bar -->
+  <div class="clients-toolbar">
+    <div class="clients-search">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearch()"
+        placeholder="Search by name or goal…"
+      />
+      <button class="search-clear" *ngIf="searchQuery" (click)="searchQuery = ''; applyFilters()">✕</button>
+    </div>
+
+    <div class="status-filters">
+      <button class="status-btn"
+              *ngFor="let s of statusFilters"
+              [class.status-btn--active]="activeStatus === s"
+              (click)="setStatus(s)">
+        {{ s | titlecase }}
+      </button>
+    </div>
+
+    <div class="clients-count">
+      {{ filteredClients.length }} client{{ filteredClients.length !== 1 ? 's' : '' }}
+    </div>
+  </div>
+
+  <!-- No Results -->
+  <div class="no-results" *ngIf="filteredClients.length === 0">
+    <span>🔍</span>
+    <p>No clients match "<strong>{{ searchQuery }}</strong>"</p>
+    <button class="btn-view" (click)="searchQuery = ''; activeStatus = 'all'; applyFilters()">
+      Clear Search
+    </button>
+  </div>
+
+  <!-- Clients Grid -->
+  <div class="clients-grid" *ngIf="filteredClients.length > 0">
+
+    <div class="client-card" *ngFor="let client of filteredClients">
+      <div class="client-card-top">
+        <div class="client-avatar-lg" [style.background]="client.avatarColor">
+          {{ client.initials }}
+        </div>
+        <span class="status-badge"
+              [style.background]="statusColor(client.status) + '22'"
+              [style.color]="statusColor(client.status)">
+          {{ client.status }}
+        </span>
+      </div>
+
+      <h3 class="client-name">{{ client.name }}</h3>
+      <p class="client-goal">{{ client.goal }}</p>
+
+      <div class="client-stats">
+        <div class="client-stat">
+          <strong>{{ client.calories }}</strong>
+          <span>kcal/day</span>
+        </div>
+        <div class="client-stat">
+          <strong>{{ client.adherence }}%</strong>
+          <span>adherence</span>
+        </div>
+        <div class="client-stat">
+          <strong>{{ client.duration }}</strong>
+          <span>duration</span>
+        </div>
+      </div>
+
+      <div class="client-next">
+        📅 Next: <strong>{{ client.nextAppointment }}</strong>
+      </div>
+
+      <div class="client-actions">
+        <button class="btn-view" (click)="viewClient(client)">View Profile</button>
+        <button class="btn-plan" (click)="openMealPlan(client)">Meal Plan</button>
+      </div>
+    </div>
+
+    <!-- Add New Client Card -->
+    <div class="client-card client-card--add"
+         (click)="toastService.show('➕ Opening new client form…')">
+      <div class="add-icon">+</div>
+      <p>Add New Client</p>
+    </div>
+
+  </div>
+</div>

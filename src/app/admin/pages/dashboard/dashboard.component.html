@@ -1,0 +1,134 @@
+<div class="dashboard">
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid">
+    <div class="kpi-card" *ngFor="let card of kpiCards">
+      <div class="kpi-top">
+        <div class="kpi-icon">{{ card.icon }}</div>
+        <div class="kpi-change" [class.kpi-change--positive]="card.positive"
+                                [class.kpi-change--negative]="!card.positive">
+          {{ card.change }}
+        </div>
+      </div>
+      <div class="kpi-value">{{ card.value }}</div>
+      <div class="kpi-label">{{ card.label }}</div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+
+    <!-- Today's Appointments -->
+    <div class="dash-card">
+      <div class="dash-card-header">
+        <h3>Today's Appointments</h3>
+        <span class="dash-badge">{{ todayAppointments.length }} sessions</span>
+      </div>
+      <div class="appointment-list">
+        <div class="appointment-item" *ngFor="let apt of todayAppointments">
+          <div class="apt-time">{{ apt.time }}</div>
+          <div class="apt-dot" [style.background]="appointmentColor(apt.color)"></div>
+          <div class="apt-info">
+            <strong>{{ apt.client }}</strong>
+            <span>{{ apt.type }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alerts -->
+    <div class="dash-card">
+      <div class="dash-card-header">
+        <h3>Clinical Alerts</h3>
+        <span class="dash-badge dash-badge--warn">{{ alerts.length }} active</span>
+      </div>
+      <div class="alert-list">
+        <div class="alert-item" *ngFor="let alert of alerts"
+             [class.alert-item--warn]="alert.type === 'warning'"
+             [class.alert-item--info]="alert.type === 'info'">
+          <div class="alert-icon">{{ alert.type === 'warning' ? '⚠️' : 'ℹ️' }}</div>
+          <div class="alert-body">
+            <strong>{{ alert.client }}</strong>
+            <span>{{ alert.message }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Macro Overview -->
+    <div class="dash-card">
+      <div class="dash-card-header">
+        <h3>Practice Avg Macros</h3>
+        <span class="dash-badge">This week</span>
+      </div>
+      <div class="macro-bars">
+        <div class="macro-bar-item">
+          <div class="macro-bar-label"><span>Protein</span><strong>128g</strong></div>
+          <div class="macro-bar-track"><div class="macro-bar-fill" style="width:70%;background:#c96a3f"></div></div>
+        </div>
+        <div class="macro-bar-item">
+          <div class="macro-bar-label"><span>Carbs</span><strong>210g</strong></div>
+          <div class="macro-bar-track"><div class="macro-bar-fill" style="width:85%;background:#7a9e7e"></div></div>
+        </div>
+        <div class="macro-bar-item">
+          <div class="macro-bar-label"><span>Fat</span><strong>62g</strong></div>
+          <div class="macro-bar-track"><div class="macro-bar-fill" style="width:45%;background:#e88f68"></div></div>
+        </div>
+        <div class="macro-bar-item">
+          <div class="macro-bar-label"><span>Avg Calories</span><strong>1,840 kcal</strong></div>
+          <div class="macro-bar-track"><div class="macro-bar-fill" style="width:75%;background:#a8c5ac"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Client Table -->
+  <div class="dash-card dash-card--full">
+    <div class="dash-card-header">
+      <h3>Recent Client Activity</h3>
+    </div>
+    <div class="client-table-wrap">
+      <table class="client-table">
+        <thead>
+          <tr>
+            <th>Client</th>
+            <th>Goal</th>
+            <th>Calories</th>
+            <th>Adherence</th>
+            <th>Last Seen</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let client of clients">
+            <td>
+              <div class="client-cell">
+                <div class="client-avatar" [style.background]="client.avatarColor">{{ client.initials }}</div>
+                <span>{{ client.name }}</span>
+              </div>
+            </td>
+            <td>{{ client.goal }}</td>
+            <td>{{ client.calories }} kcal</td>
+            <td>
+              <div class="adherence-bar">
+                <div class="adherence-fill"
+                     [style.width]="client.adherence + '%'"
+                     [style.background]="client.adherence < 70 ? '#c96a3f' : '#7a9e7e'">
+                </div>
+                <span>{{ client.adherence }}%</span>
+              </div>
+            </td>
+            <td>{{ client.lastSeen }}</td>
+            <td>
+              <span class="status-badge" [style.background]="statusColor(client.status) + '22'"
+                    [style.color]="statusColor(client.status)">
+                {{ client.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

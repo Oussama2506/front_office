@@ -1,0 +1,53 @@
+.schedule-page { display: flex; flex-direction: column; gap: 20px; }
+
+.schedule-header {
+  display: flex; justify-content: space-between; align-items: center;
+  background: #fff; border-radius: 16px; padding: 16px 24px;
+  border: 1px solid #e8ddd6;
+}
+
+.schedule-nav {
+  display: flex; align-items: center; gap: 16px;
+  button { background: #f4f1ee; border: 1px solid #e8ddd6; border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 13px; transition: all 0.2s; &:hover { border-color: #c96a3f; color: #c96a3f; } }
+  h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 600; }
+}
+
+.btn-add-apt {
+  background: #c96a3f; color: #fff; border: none; border-radius: 100px;
+  padding: 10px 20px; font-size: 13px; font-weight: 600; font-family: 'Jost', sans-serif;
+  cursor: pointer; transition: all 0.2s;
+  &:hover { background: #a8532c; }
+}
+
+.schedule-grid {
+  display: grid; grid-template-columns: 60px repeat(5, 1fr);
+  background: #fff; border-radius: 16px; border: 1px solid #e8ddd6; overflow: hidden;
+}
+
+.schedule-day-header {
+  background: #faf7f2; padding: 14px 8px; text-align: center;
+  font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  color: #6b6460; border-bottom: 1px solid #e8ddd6;
+}
+
+.schedule-time-col { display: flex; flex-direction: column; border-right: 1px solid #e8ddd6; }
+.schedule-day-col  { display: flex; flex-direction: column; border-right: 1px solid #e8ddd6; &:last-child { border-right: none; } }
+
+.time-slot {
+  height: 80px; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: #b5aaa5; font-weight: 600;
+  border-bottom: 1px solid #f4f1ee;
+}
+
+.schedule-cell {
+  height: 80px; padding: 4px 6px; border-bottom: 1px solid #f4f1ee;
+  display: flex; flex-direction: column; gap: 4px;
+}
+
+.apt-block {
+  border-radius: 6px; padding: 4px 8px; cursor: pointer;
+  transition: opacity 0.2s; flex: 1;
+  &:hover { opacity: 0.8; }
+  strong { font-size: 11px; font-weight: 600; color: #2d2d2d; display: block; }
+  span   { font-size: 10px; color: #6b6460; }
+}

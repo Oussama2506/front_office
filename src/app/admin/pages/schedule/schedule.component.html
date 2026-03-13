@@ -1,0 +1,32 @@
+<div class="schedule-page">
+  <div class="schedule-header">
+    <div class="schedule-nav">
+      <button (click)="toastService.show('◀ Previous week')">◀</button>
+      <h3>March 4 – 8, 2026</h3>
+      <button (click)="toastService.show('Today')">Today</button>
+      <button (click)="toastService.show('▶ Next week')">▶</button>
+    </div>
+    <button class="btn-add-apt" (click)="toastService.show('➕ New appointment')">+ Appointment</button>
+  </div>
+
+  <div class="schedule-grid">
+    <div class="schedule-time-col">
+      <div class="schedule-day-header"></div>
+      <div class="time-slot" *ngFor="let time of timeSlots">{{ time }}</div>
+    </div>
+
+    <div class="schedule-day-col" *ngFor="let day of days">
+      <div class="schedule-day-header">{{ day }}</div>
+      <div class="schedule-cell" *ngFor="let time of timeSlots">
+        <div class="apt-block"
+             *ngFor="let apt of getAppointments(day, time)"
+             [style.background]="aptBg(apt.color)"
+             [style.border-left]="'3px solid ' + aptBorder(apt.color)"
+             (click)="toastService.show('📅 ' + apt.client + ' — ' + apt.type)">
+          <strong>{{ apt.client }}</strong>
+          <span>{{ apt.type }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
