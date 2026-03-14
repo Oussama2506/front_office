@@ -18,10 +18,11 @@ export class BiometricEntryComponent {
   diastolic  = 0;
   glucose    = 0;
   notes      = '';
+  saving     = false;
 
-  bmi       = 0;
-  bmiLabel  = '';
-  bmiColor  = '';
+  bmi      = 0;
+  bmiLabel = '';
+  bmiColor = '';
 
   constructor(
     private dossierService: DossierService,
@@ -37,24 +38,36 @@ export class BiometricEntryComponent {
     }
   }
 
+  scaleWidth(bmi: number): string {
+    return Math.min((bmi / 40) * 100, 100) + '%';
+  }
+
   submit(): void {
     if (!this.weight || !this.height) {
       this.toastService.show('⚠️ Weight and height are required');
       return;
     }
-    this.dossierService.addEntry({
-      weight: this.weight, height: this.height,
+
+    this.saving = true;
+    this.dossierService.addBiometric({
+      weight:     this.weight,
+      height:     this.height,
       bodyFat:    this.bodyFat    || null,
       muscleMass: this.muscleMass || null,
       systolic:   this.systolic   || null,
       diastolic:  this.diastolic  || null,
       glucose:    this.glucose    || null,
-      notes: this.notes
+      notes:      this.notes,
+    }).subscribe({
+      next: () => {
+        this.toastService.show('✅ Measurement saved!');
+        this.saving = false;
+        this.saved.emit();
+      },
+      error: () => {
+        this.toastService.show('❌ Failed to save. Is the backend running?');
+        this.saving = false;
+      }
     });
-    this.toastService.show('✅ Measurement saved!');
-    this.saved.emit();
   }
-  scaleWidth(bmi: number): string {
-  return Math.min((bmi / 40) * 100, 100) + '%';
-}
 }

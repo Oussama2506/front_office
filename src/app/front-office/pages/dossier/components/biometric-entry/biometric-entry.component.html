@@ -86,7 +86,9 @@
     </div>
 
     <div class="form-actions">
-      <button class="btn-save" (click)="submit()">Save Measurement ✓</button>
+      <button class="btn-save" (click)="submit()" [disabled]="saving">
+          {{ saving ? 'Saving…' : 'Save Measurement ✓' }}
+      </button>
     </div>
   </div>
 </div>

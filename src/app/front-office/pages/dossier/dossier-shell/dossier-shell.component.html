@@ -9,19 +9,17 @@
         <p>{{ pageSubtitle }}</p>
       </div>
 
-      <!-- Profile Summary Badge -->
-      <div class="profile-badge" *ngIf="profile.isComplete">
-        <div class="profile-badge-avatar">
-          {{ profile.firstName[0] }}{{ profile.lastName[0] }}
-        </div>
+      <!-- Profile badge — shown when profile is complete -->
+      <div class="profile-badge" *ngIf="isProfileComplete">
+        <div class="profile-badge-avatar">{{ profileInitials }}</div>
         <div class="profile-badge-info">
-          <strong>{{ profile.firstName }} {{ profile.lastName }}</strong>
-          <span>🩸 {{ profile.bloodType }} · {{ profile.gender | titlecase }}</span>
+          <strong>{{ profileFullName }}</strong>
+          <span>🩸 {{ profileBloodType }} · {{ profileGender | titlecase }}</span>
         </div>
       </div>
 
-      <!-- Setup CTA if profile not complete -->
-      <div class="setup-cta" *ngIf="!profile.isComplete">
+      <!-- Setup CTA — shown when profile is NOT complete -->
+      <div class="setup-cta" *ngIf="!isProfileComplete">
         <span>👤</span>
         <div>
           <strong>Profile not set up</strong>
@@ -31,10 +29,10 @@
       </div>
     </div>
 
-    <!-- Step indicator if no entries yet -->
+    <!-- Onboarding steps -->
     <div class="onboarding-steps" *ngIf="!hasEntries">
-      <div class="step" [class.step--done]="profile.isComplete">
-        <div class="step-num">{{ profile.isComplete ? '✓' : '1' }}</div>
+      <div class="step" [class.step--done]="isProfileComplete">
+        <div class="step-num">{{ isProfileComplete ? '✓' : '1' }}</div>
         <div class="step-info">
           <strong>Complete Medical Profile</strong>
           <span>Personal info, allergies, conditions</span>
@@ -70,10 +68,10 @@
 
     <!-- Tab Content -->
     <div class="dossier-content">
-      <app-health-dashboard  *ngIf="activeTab === 'dashboard'"></app-health-dashboard>
-      <app-progress-charts   *ngIf="activeTab === 'charts'"></app-progress-charts>
-      <app-health-alerts     *ngIf="activeTab === 'alerts'"></app-health-alerts>
-      <app-biometric-entry   *ngIf="activeTab === 'add'" (saved)="activeTab = 'dashboard'"></app-biometric-entry>
+      <app-health-dashboard   *ngIf="activeTab === 'dashboard'"></app-health-dashboard>
+      <app-progress-charts    *ngIf="activeTab === 'charts'"></app-progress-charts>
+      <app-health-alerts      *ngIf="activeTab === 'alerts'"></app-health-alerts>
+      <app-biometric-entry    *ngIf="activeTab === 'add'"     (saved)="activeTab = 'dashboard'"></app-biometric-entry>
       <app-medical-profile-form *ngIf="activeTab === 'profile'" (saved)="activeTab = 'dashboard'"></app-medical-profile-form>
     </div>
 

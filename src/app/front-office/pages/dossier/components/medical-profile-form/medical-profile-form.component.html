@@ -94,7 +94,9 @@
     </div>
 
     <div class="form-actions">
-      <button class="btn-save" (click)="save()">Save Medical Profile ✓</button>
+      <button class="btn-save" (click)="save()" [disabled]="saving">
+          {{ saving ? 'Saving…' : 'Save Medical Profile ✓' }}
+      </button>
     </div>
   </div>
 </div>

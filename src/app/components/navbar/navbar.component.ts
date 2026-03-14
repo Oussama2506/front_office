@@ -20,8 +20,9 @@ export class NavbarComponent {
     { label: 'Meal Plans', anchor: 'mealplans'  },
     { label: 'Articles',   anchor: 'blog'       },
     { label: 'Calculator', anchor: 'calculator' },
-    { label: 'About',      anchor: 'about'      },
     { label: 'Dossier',    route: '/dossier'    },
+    { label: 'About',      anchor: 'about'      },
+    
   ];
 
   constructor(public toastService: ToastService) {}

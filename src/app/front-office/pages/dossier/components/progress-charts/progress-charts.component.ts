@@ -25,15 +25,19 @@ export class ProgressChartsComponent implements OnInit, AfterViewInit, OnDestroy
 
   constructor(private dossierService: DossierService) {}
 
-  ngOnInit(): void {
-    const entries = this.dossierService.entries;
-    this.labels        = entries.map(e => e.date);
+ngOnInit(): void {
+  // Use live entries from the service instead of hardcoded data
+  this.dossierService.entries$.subscribe(entries => {
+    this.labels        = entries.map(e =>
+      new Date(e.recordedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    );
     this.weightData    = entries.map(e => e.weight);
     this.bmiData       = entries.map(e => e.bmi);
     this.systolicData  = entries.map(e => e.systolic  ?? 0);
     this.diastolicData = entries.map(e => e.diastolic ?? 0);
     this.glucoseData   = entries.map(e => e.glucose   ?? 0);
-  }
+  });
+}
 
   ngAfterViewInit(): void {
     setTimeout(() => this.buildCharts(), 100);
