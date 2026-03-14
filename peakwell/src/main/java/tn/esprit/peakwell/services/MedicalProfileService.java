@@ -65,7 +65,7 @@ public class MedicalProfileService {
         res.setAllergies(p.getAllergies());
         res.setConditions(p.getConditions());
         res.setMedications(p.getMedications());
-        res.setComplete(p.isComplete());
+        res.setComplete(p.getComplete());
         return res;
     }
 }

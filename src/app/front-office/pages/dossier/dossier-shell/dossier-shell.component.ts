@@ -12,34 +12,37 @@ export class DossierShellComponent implements OnInit {
   activeTab = 'dashboard';
   loading = true;
 
-  tabs = [
-    { value: 'dashboard', label: '📊 My Health',       show: 'always'     },
-    { value: 'charts',    label: '📈 Progress',         show: 'hasEntries' },
-    { value: 'alerts',    label: '⚠️ Alerts',           show: 'hasEntries' },
-    { value: 'add',       label: '➕ Add Measurement',   show: 'always'     },
-    { value: 'profile',   label: '👤 Medical Profile',  show: 'always'     },
-  ];
+tabs = [
+  { value: 'profile',   label: '👤 Medical Profile',  show: 'always'     },
+  { value: 'add',       label: '➕ Add Measurement',   show: 'always'     },
+  { value: 'dashboard', label: '📊 My Health',         show: 'always'     },
+  { value: 'charts',    label: '📈 Progress',          show: 'hasEntries' },
+  { value: 'alerts',    label: '⚠️ Alerts',            show: 'hasEntries' },
+];
 
   constructor(public dossierService: DossierService) {}
 
-  ngOnInit(): void {
-    // Load both profile and biometrics from backend on page load
-    this.dossierService.loadProfile();
-    this.dossierService.loadBiometrics();
+ngOnInit(): void {
+  this.dossierService.loadProfile();
+  this.dossierService.loadBiometrics();
 
-    this.dossierService.profile$.subscribe(p => {
-      this.profile  = p;
-      this.loading  = false;
-    });
+  this.dossierService.profile$.subscribe(p => {
+    this.profile = p;
+    this.loading = false;
 
-    this.dossierService.entries$.subscribe(e => {
-      this.hasEntries = e.length > 0;
-      if (!this.hasEntries && this.activeTab === 'charts') {
-        this.activeTab = 'dashboard';
-      }
-    });
-  }
+    // If no profile yet → go to profile form
+    if (!p || !p.complete) {
+      this.activeTab = 'profile';
+    }
+  });
 
+  this.dossierService.entries$.subscribe(e => {
+    this.hasEntries = e.length > 0;
+    if (!this.hasEntries && this.activeTab === 'charts') {
+      this.activeTab = 'dashboard';
+    }
+  });
+}
   get visibleTabs() {
     return this.tabs.filter(t =>
       t.show === 'always' || (t.show === 'hasEntries' && this.hasEntries)

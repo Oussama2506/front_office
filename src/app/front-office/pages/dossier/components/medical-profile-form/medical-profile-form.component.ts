@@ -53,35 +53,35 @@ export class MedicalProfileFormComponent implements OnInit {
   addMedication(): void { if (this.newMedication.trim()) { this.profile.medications  = [...this.profile.medications,  this.newMedication.trim()]; this.newMedication = ''; } }
   removeMedication(i: number): void { this.profile.medications  = this.profile.medications.filter((_,idx) => idx !== i); }
 
-  save(): void {
-    if (!this.profile.firstName || !this.profile.lastName || !this.profile.dob ||
-        !this.profile.gender || !this.profile.bloodType || !this.profile.height) {
-      this.toastService.show('⚠️ Please fill in all required fields');
-      return;
-    }
-
-    this.saving = true;
-    this.dossierService.saveProfile({
-      firstName:        this.profile.firstName,
-      lastName:         this.profile.lastName,
-      dateOfBirth:      this.profile.dob,
-      gender:           this.profile.gender,
-      bloodType:        this.profile.bloodType,
-      height:           this.profile.height,
-      emergencyContact: this.profile.emergencyContact,
-      allergies:        this.profile.allergies,
-      conditions:       this.profile.conditions,
-      medications:      this.profile.medications,
-    }).subscribe({
-      next: () => {
-        this.toastService.show('✅ Medical profile saved!');
-        this.saving = false;
-        this.saved.emit();
-      },
-      error: () => {
-        this.toastService.show('❌ Failed to save profile. Is the backend running?');
-        this.saving = false;
-      }
-    });
+save(): void {
+  if (!this.profile.firstName || !this.profile.lastName || !this.profile.dob ||
+      !this.profile.gender || !this.profile.bloodType || !this.profile.height) {
+    this.toastService.show('⚠️ Please fill in all required fields');
+    return;
   }
+
+  this.saving = true;
+  this.dossierService.saveProfile({
+    firstName:        this.profile.firstName,
+    lastName:         this.profile.lastName,
+    dateOfBirth:      this.profile.dob,
+    gender:           this.profile.gender,
+    bloodType:        this.profile.bloodType,
+    height:           this.profile.height,
+    emergencyContact: this.profile.emergencyContact,
+    allergies:        this.profile.allergies,
+    conditions:       this.profile.conditions,
+    medications:      this.profile.medications,
+  }).subscribe({
+    next: () => {
+      this.toastService.show('✅ Medical profile saved! Now add your first measurement.');
+      this.saving = false;
+      this.saved.emit();
+    },
+    error: () => {
+      this.toastService.show('❌ Failed to save profile. Is the backend running?');
+      this.saving = false;
+    }
+  });
+}
 }

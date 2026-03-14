@@ -72,7 +72,7 @@
       <app-progress-charts    *ngIf="activeTab === 'charts'"></app-progress-charts>
       <app-health-alerts      *ngIf="activeTab === 'alerts'"></app-health-alerts>
       <app-biometric-entry    *ngIf="activeTab === 'add'"     (saved)="activeTab = 'dashboard'"></app-biometric-entry>
-      <app-medical-profile-form *ngIf="activeTab === 'profile'" (saved)="activeTab = 'dashboard'"></app-medical-profile-form>
+      <app-medical-profile-form *ngIf="activeTab === 'profile'" (saved)="activeTab = 'add'"></app-medical-profile-form>
     </div>
 
   </div>

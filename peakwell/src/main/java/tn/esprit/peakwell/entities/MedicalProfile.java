@@ -2,6 +2,9 @@ package tn.esprit.peakwell.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,37 +16,52 @@ import java.util.List;
 @Builder
 public class MedicalProfile {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private String firstName;
-    private String lastName;
-    private String dateOfBirth;
-    private String gender;
-    private String bloodType;
-    private Double height;
-    private String emergencyContact;
+  private String firstName;
+  private String lastName;
+  private String dateOfBirth;
+  private String gender;
+  private String bloodType;
+  private Double height;
+  private String emergencyContact;
 
-    @ElementCollection
-    @CollectionTable(name = "profile_allergies", joinColumns = @JoinColumn(name = "profile_id"))
-    @Column(name = "allergy")
-    @Builder.Default
-    private List<String> allergies = new ArrayList<>();
+  @Column(nullable = false)
+  @Builder.Default
+  private Boolean complete = false;
 
-    @ElementCollection
-    @CollectionTable(name = "profile_conditions", joinColumns = @JoinColumn(name = "profile_id"))
-    @Column(name = "condition_name")
-    @Builder.Default
-    private List<String> conditions = new ArrayList<>();
+  @ElementCollection
+  @CollectionTable(
+    name = "profile_allergies",
+    joinColumns = @JoinColumn(name = "profile_id"),
+    foreignKey = @ForeignKey(name = "fk_allergies_profile")
+  )
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  @Column(name = "allergy")
+  @Builder.Default
+  private List<String> allergies = new ArrayList<>();
 
-    @ElementCollection
-    @CollectionTable(name = "profile_medications", joinColumns = @JoinColumn(name = "profile_id"))
-    @Column(name = "medication")
-    @Builder.Default
-    private List<String> medications = new ArrayList<>();
+  @ElementCollection
+  @CollectionTable(
+    name = "profile_conditions",
+    joinColumns = @JoinColumn(name = "profile_id"),
+    foreignKey = @ForeignKey(name = "fk_conditions_profile")
+  )
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  @Column(name = "condition_name")
+  @Builder.Default
+  private List<String> conditions = new ArrayList<>();
 
-    @Column(nullable = false)
-    @Builder.Default
-    private boolean complete = false;
+  @ElementCollection
+  @CollectionTable(
+    name = "profile_medications",
+    joinColumns = @JoinColumn(name = "profile_id"),
+    foreignKey = @ForeignKey(name = "fk_medications_profile")
+  )
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  @Column(name = "medication")
+  @Builder.Default
+  private List<String> medications = new ArrayList<>();
 }
