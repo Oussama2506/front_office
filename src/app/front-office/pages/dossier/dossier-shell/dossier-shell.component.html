@@ -73,6 +73,9 @@
       <app-health-alerts      *ngIf="activeTab === 'alerts'"></app-health-alerts>
       <app-biometric-entry    *ngIf="activeTab === 'add'"     (saved)="activeTab = 'dashboard'"></app-biometric-entry>
       <app-medical-profile-form *ngIf="activeTab === 'profile'" (saved)="activeTab = 'add'"></app-medical-profile-form>
+      <app-ai-insights        *ngIf="activeTab === 'insights'"></app-ai-insights>
+      <app-goal-tracking      *ngIf="activeTab === 'goals'"></app-goal-tracking>
+      <app-health-report      *ngIf="activeTab === 'report'"></app-health-report>
     </div>
 
   </div>

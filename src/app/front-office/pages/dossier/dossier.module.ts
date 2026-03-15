@@ -9,6 +9,10 @@ import { BiometricEntryComponent }     from './components/biometric-entry/biomet
 import { HealthDashboardComponent }    from './components/health-dashboard/health-dashboard.component';
 import { ProgressChartsComponent }     from './components/progress-charts/progress-charts.component';
 import { HealthAlertsComponent }       from './components/health-alerts/health-alerts.component';
+import { AiInsightsComponent } from './components/ai-insights/ai-insights.component';
+import { GoalTrackingComponent } from './components/goal-tracking/goal-tracking.component';
+import { HealthReportComponent } from './components/health-report/health-report.component';
+import { FilterBySeverityPipe } from './pipes/filter-severity.pipe';
 
 @NgModule({
   declarations: [
@@ -18,6 +22,10 @@ import { HealthAlertsComponent }       from './components/health-alerts/health-a
     HealthDashboardComponent,
     ProgressChartsComponent,
     HealthAlertsComponent,
+    AiInsightsComponent,
+    GoalTrackingComponent,
+    HealthReportComponent,
+    FilterBySeverityPipe,
   ],
   imports: [
     CommonModule,

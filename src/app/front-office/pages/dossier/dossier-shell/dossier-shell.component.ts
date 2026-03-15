@@ -18,6 +18,9 @@ tabs = [
   { value: 'dashboard', label: '📊 My Health',         show: 'always'     },
   { value: 'charts',    label: '📈 Progress',          show: 'hasEntries' },
   { value: 'alerts',    label: '⚠️ Alerts',            show: 'hasEntries' },
+  { value: 'insights',     label: '🤖 AI Insights',       show: 'hasEntries' },
+  { value: 'goals',        label: '🎯 Goals',             show: 'always'     },
+  { value: 'report',       label: '📄 Report',            show: 'hasEntries' },
 ];
 
   constructor(public dossierService: DossierService) {}
