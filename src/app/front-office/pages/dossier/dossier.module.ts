@@ -13,6 +13,7 @@ import { AiInsightsComponent } from './components/ai-insights/ai-insights.compon
 import { GoalTrackingComponent } from './components/goal-tracking/goal-tracking.component';
 import { HealthReportComponent } from './components/health-report/health-report.component';
 import { FilterBySeverityPipe } from './pipes/filter-severity.pipe';
+import { SymptomJournalComponent } from './components/symptom-journal/symptom-journal.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { FilterBySeverityPipe } from './pipes/filter-severity.pipe';
     GoalTrackingComponent,
     HealthReportComponent,
     FilterBySeverityPipe,
+    SymptomJournalComponent,
   ],
   imports: [
     CommonModule,
