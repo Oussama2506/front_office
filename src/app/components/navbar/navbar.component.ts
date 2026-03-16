@@ -20,7 +20,7 @@ export class NavbarComponent {
     { label: 'Meal Plans', anchor: 'mealplans'  },
     { label: 'Articles',   anchor: 'blog'       },
     { label: 'Calculator', anchor: 'calculator' },
-    { label: 'Dossier',    route: '/dossier'    },
+    { label: 'Medical Profile',    route: '/dossier'    },
     { label: 'About',      anchor: 'about'      },
     
   ];
