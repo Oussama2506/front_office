@@ -1,26 +1,29 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { DossierService } from '../../services/dossier.service';
 import { ToastService } from '../../../../../shared/services/toast.service';
 
-interface HealthGoal {
+interface MilestoneResponse {
   id: number;
-  metric: string;
-  icon: string;
-  currentValue: number;
+  label: string;
   targetValue: number;
-  unit: string;
-  direction: 'decrease' | 'increase' | 'maintain';
-  deadline: string;
-  createdAt: string;
-  milestones: Milestone[];
-  color: string;
+  reached: boolean;
+  reachedDate: string | null;
 }
 
-interface Milestone {
-  label: string;
-  value: number;
-  reached: boolean;
-  reachedDate?: string;
+interface HealthGoalResponse {
+  id: number;
+  metric: string;
+  direction: string;
+  startValue: number;
+  targetValue: number;
+  unit: string;
+  deadline: string;
+  active: boolean;
+  achieved: boolean;
+  achievedDate: string | null;
+  createdAt: string;
+  milestones: MilestoneResponse[];
 }
 
 interface GoalTemplate {
@@ -30,7 +33,6 @@ interface GoalTemplate {
   unit: string;
   direction: 'decrease' | 'increase' | 'maintain';
   color: string;
-  suggestedTarget?: number;
 }
 
 @Component({
@@ -39,9 +41,12 @@ interface GoalTemplate {
   styleUrls: ['./goal-tracking.component.scss']
 })
 export class GoalTrackingComponent implements OnInit {
-  goals: HealthGoal[] = [];
+  private apiBase = 'http://localhost:8090/peakwell/api/goals';
+
+  goals: HealthGoalResponse[] = [];
   showCreateModal = false;
   hasData = false;
+  loading = true;
 
   // Create form
   selectedTemplate: GoalTemplate | null = null;
@@ -59,6 +64,7 @@ export class GoalTrackingComponent implements OnInit {
   ];
 
   constructor(
+    private http: HttpClient,
     private dossierService: DossierService,
     private toastService: ToastService
   ) {}
@@ -68,12 +74,28 @@ export class GoalTrackingComponent implements OnInit {
       this.hasData = entries.length > 0;
       if (this.hasData) {
         this.loadGoals();
-        this.updateGoalProgress();
+      } else {
+        this.loading = false;
       }
     });
   }
 
-  // ── Goal CRUD ─────────────────────────────────
+  // ── Data Loading ──────────────────────────────
+
+  loadGoals(): void {
+    this.http.get<HealthGoalResponse[]>(this.apiBase).subscribe({
+      next: goals => {
+        this.goals = goals;
+        this.loading = false;
+      },
+      error: () => {
+        this.toastService.show('❌ Failed to load goals');
+        this.loading = false;
+      }
+    });
+  }
+
+  // ── Goal Creation ─────────────────────────────
 
   openCreate(): void {
     this.selectedTemplate = null;
@@ -87,7 +109,6 @@ export class GoalTrackingComponent implements OnInit {
     const latest = this.dossierService.latest;
     if (latest && template.metric) {
       const currentVal = this.getMetricValue(template.metric);
-      // Suggest a reasonable target
       if (template.direction === 'decrease') {
         this.newGoalTarget = Math.round((currentVal * 0.9) * 10) / 10;
       } else if (template.direction === 'increase') {
@@ -96,7 +117,6 @@ export class GoalTrackingComponent implements OnInit {
         this.newGoalTarget = currentVal;
       }
     }
-    // Default deadline: 3 months from now
     const deadline = new Date();
     deadline.setMonth(deadline.getMonth() + 3);
     this.newGoalDeadline = deadline.toISOString().split('T')[0];
@@ -109,39 +129,41 @@ export class GoalTrackingComponent implements OnInit {
     }
 
     const currentVal = this.getMetricValue(this.selectedTemplate.metric);
-    const milestones = this.generateMilestones(currentVal, this.newGoalTarget, this.selectedTemplate.direction);
 
-    const goal: HealthGoal = {
-      id: Date.now(),
+    this.http.post<HealthGoalResponse>(this.apiBase, {
       metric: this.selectedTemplate.metric,
-      icon: this.selectedTemplate.icon,
-      currentValue: currentVal,
+      direction: this.selectedTemplate.direction,
+      startValue: currentVal,
       targetValue: this.newGoalTarget,
       unit: this.selectedTemplate.unit,
-      direction: this.selectedTemplate.direction,
       deadline: this.newGoalDeadline,
-      createdAt: new Date().toISOString(),
-      milestones,
-      color: this.selectedTemplate.color,
-    };
-
-    this.goals.push(goal);
-    this.saveGoals();
-    this.showCreateModal = false;
-    this.toastService.show(`🎯 Goal created: ${this.selectedTemplate.label}`);
+    }).subscribe({
+      next: (goal) => {
+        this.goals.unshift(goal);
+        this.showCreateModal = false;
+        this.toastService.show(`🎯 Goal created: ${this.selectedTemplate!.label}`);
+      },
+      error: () => {
+        this.toastService.show('❌ Failed to create goal — is the backend running?');
+      }
+    });
   }
 
   deleteGoal(goalId: number): void {
-    this.goals = this.goals.filter(g => g.id !== goalId);
-    this.saveGoals();
-    this.toastService.show('🗑️ Goal removed');
+    this.http.delete(`${this.apiBase}/${goalId}`).subscribe({
+      next: () => {
+        this.goals = this.goals.filter(g => g.id !== goalId);
+        this.toastService.show('🗑️ Goal removed');
+      },
+      error: () => this.toastService.show('❌ Failed to delete goal')
+    });
   }
 
   // ── Progress Calculation ──────────────────────
 
-  getProgress(goal: HealthGoal): number {
+  getProgress(goal: HealthGoalResponse): number {
     const current = this.getMetricValue(goal.metric);
-    const start = goal.currentValue;
+    const start = goal.startValue;
     const target = goal.targetValue;
 
     if (goal.direction === 'decrease') {
@@ -155,32 +177,41 @@ export class GoalTrackingComponent implements OnInit {
     }
   }
 
-  getCurrentValue(goal: HealthGoal): number {
+  getCurrentValue(goal: HealthGoalResponse): number {
     return this.getMetricValue(goal.metric);
   }
 
-  getRemainingValue(goal: HealthGoal): string {
+  getRemainingValue(goal: HealthGoalResponse): string {
     const current = this.getMetricValue(goal.metric);
     const diff = Math.abs(Math.round((goal.targetValue - current) * 10) / 10);
     if (this.getProgress(goal) >= 100) return 'Goal reached!';
     return `${diff} ${goal.unit} to go`;
   }
 
-  getDaysRemaining(goal: HealthGoal): number {
+  getDaysRemaining(goal: HealthGoalResponse): number {
     const now = new Date();
     const deadline = new Date(goal.deadline);
     return Math.max(0, Math.ceil((deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
   }
 
-  getGoalStatus(goal: HealthGoal): { label: string; color: string } {
+  getGoalStatus(goal: HealthGoalResponse): { label: string; color: string } {
+    if (goal.achieved) return { label: 'Achieved!', color: '#7a9e7e' };
     const progress = this.getProgress(goal);
     const daysLeft = this.getDaysRemaining(goal);
-
-    if (progress >= 100) return { label: 'Achieved!', color: '#7a9e7e' };
     if (daysLeft === 0) return { label: 'Expired', color: '#b5aaa5' };
     if (progress >= 75) return { label: 'Almost there', color: '#7a9e7e' };
     if (progress >= 40) return { label: 'On track', color: '#e88f68' };
     return { label: 'Needs effort', color: '#c96a3f' };
+  }
+
+  getGoalColor(goal: HealthGoalResponse): string {
+    const template = this.templates.find(t => t.metric === goal.metric && t.direction === goal.direction);
+    return template?.color ?? '#c96a3f';
+  }
+
+  getGoalIcon(goal: HealthGoalResponse): string {
+    const template = this.templates.find(t => t.metric === goal.metric);
+    return template?.icon ?? '🎯';
   }
 
   getMetricLabel(metric: string): string {
@@ -189,60 +220,6 @@ export class GoalTrackingComponent implements OnInit {
       muscleMass: 'Muscle Mass', systolic: 'Systolic BP', glucose: 'Glucose'
     };
     return map[metric] ?? metric;
-  }
-
-  // ── Milestones ────────────────────────────────
-
-  private generateMilestones(start: number, target: number, direction: string): Milestone[] {
-    const milestones: Milestone[] = [];
-    const diff = target - start;
-    const steps = [0.25, 0.5, 0.75, 1.0];
-    const labels = ['25% milestone', '50% — halfway!', '75% milestone', 'Goal reached!'];
-
-    for (let i = 0; i < steps.length; i++) {
-      milestones.push({
-        label: labels[i],
-        value: Math.round((start + diff * steps[i]) * 10) / 10,
-        reached: false
-      });
-    }
-    return milestones;
-  }
-
-  private updateGoalProgress(): void {
-    for (const goal of this.goals) {
-      for (const m of goal.milestones) {
-        const current = this.getMetricValue(goal.metric);
-        if (goal.direction === 'decrease') {
-          m.reached = current <= m.value;
-        } else {
-          m.reached = current >= m.value;
-        }
-        if (m.reached && !m.reachedDate) {
-          m.reachedDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-        }
-      }
-    }
-    this.saveGoals();
-  }
-
-  // ── Persistence (localStorage) ────────────────
-
-  private saveGoals(): void {
-    try {
-      localStorage.setItem('peakwell_goals', JSON.stringify(this.goals));
-    } catch (e) { /* silently fail in case of no localStorage */ }
-  }
-
-  private loadGoals(): void {
-    try {
-      const raw = localStorage.getItem('peakwell_goals');
-      if (raw) {
-        this.goals = JSON.parse(raw);
-      }
-    } catch (e) {
-      this.goals = [];
-    }
   }
 
   // ── Helpers ───────────────────────────────────

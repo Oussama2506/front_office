@@ -5,7 +5,12 @@
   <p>Add biometric data first, then create personalized goals with milestones to track your progress.</p>
 </div>
 
-<div class="goals" *ngIf="hasData">
+<div class="empty-dash" *ngIf="hasData && loading">
+  <div class="empty-dash-icon">⏳</div>
+  <h3>Loading your goals…</h3>
+</div>
+
+<div class="goals" *ngIf="hasData && !loading">
 
   <!-- Header -->
   <div class="goals-header">
@@ -30,8 +35,8 @@
   <div class="goal-card" *ngFor="let goal of goals">
     <div class="goal-top">
       <div class="goal-identity">
-        <span class="goal-icon" [style.background]="goal.color + '15'" [style.color]="goal.color">
-          {{ goal.icon }}
+        <span class="goal-icon" [style.background]="getGoalColor(goal) + '15'" [style.color]="getGoalColor(goal)">
+          {{ getGoalIcon(goal) }}
         </span>
         <div>
           <div class="goal-metric">{{ getMetricLabel(goal.metric) }}</div>
@@ -55,12 +60,12 @@
           <svg viewBox="0 0 120 120" class="progress-ring-svg">
             <circle cx="60" cy="60" r="50" fill="none" stroke="#ede8e3" stroke-width="10"/>
             <circle cx="60" cy="60" r="50" fill="none"
-                    [attr.stroke]="goal.color" stroke-width="10"
+                    [attr.stroke]="getGoalColor(goal)" stroke-width="10"
                     stroke-linecap="round"
                     [attr.stroke-dasharray]="(getProgress(goal) / 100 * 314) + ' 314'"
                     transform="rotate(-90 60 60)"/>
           </svg>
-          <div class="progress-ring-value" [style.color]="goal.color">
+          <div class="progress-ring-value" [style.color]="getGoalColor(goal)">
             {{ getProgress(goal) }}%
           </div>
         </div>
@@ -99,7 +104,7 @@
           </div>
           <div class="milestone-info">
             <span class="milestone-title">{{ m.label }}</span>
-            <span class="milestone-value">{{ m.value }} {{ goal.unit }}</span>
+            <span class="milestone-value">{{ m.targetValue }} {{ goal.unit }}</span>
             <span class="milestone-date" *ngIf="m.reachedDate">{{ m.reachedDate }}</span>
           </div>
         </div>
