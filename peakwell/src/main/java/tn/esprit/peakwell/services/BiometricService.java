@@ -5,9 +5,11 @@ import tn.esprit.peakwell.dto.BiometricRequest;
 import tn.esprit.peakwell.dto.BiometricResponse;
 import tn.esprit.peakwell.dto.HealthAlertDto;
 import tn.esprit.peakwell.entities.BiometricEntry;
+import tn.esprit.peakwell.entities.MedicalProfile;
 import tn.esprit.peakwell.repositories.BiometricEntryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import tn.esprit.peakwell.repositories.MedicalProfileRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,14 +20,17 @@ import java.util.stream.Collectors;
 public class BiometricService {
 
     private final BiometricEntryRepository repository;
+    private final MedicalProfileRepository profileRepository;
 
-    public List<BiometricResponse> getAll() {
+  public List<BiometricResponse> getAll() {
         return repository.findAllByOrderByRecordedAtAsc()
                 .stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     public BiometricResponse addEntry(BiometricRequest request) {
         double bmi = Math.round((request.getWeight() / Math.pow(request.getHeight() / 100.0, 2)) * 10.0) / 10.0;
+      MedicalProfile profile = profileRepository.findById(1L)
+        .orElseThrow(() -> new RuntimeException("Medical profile not found. Please create your profile first."));
 
         BiometricEntry entry = BiometricEntry.builder()
                 .weight(request.getWeight())
@@ -37,6 +42,7 @@ public class BiometricService {
                 .diastolic(request.getDiastolic())
                 .glucose(request.getGlucose())
                 .notes(request.getNotes())
+                .profile(profile)
                 .build();
 
         return toResponse(repository.save(entry));

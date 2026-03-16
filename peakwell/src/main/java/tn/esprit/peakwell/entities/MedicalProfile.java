@@ -64,4 +64,10 @@ public class MedicalProfile {
   @Column(name = "medication")
   @Builder.Default
   private List<String> medications = new ArrayList<>();
+
+  @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<BiometricEntry> biometricEntries = new ArrayList<>();
+
+  @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<SymptomEntry> symptomEntries = new ArrayList<>();
 }

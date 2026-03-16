@@ -63,4 +63,8 @@ public class SymptomEntry {
   @Column(nullable = false, updatable = false)
   @Builder.Default
   private LocalDateTime createdAt = LocalDateTime.now();
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "profile_id", nullable = false)
+  private MedicalProfile profile;
 }

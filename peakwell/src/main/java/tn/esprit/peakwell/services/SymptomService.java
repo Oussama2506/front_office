@@ -5,8 +5,10 @@ import tn.esprit.peakwell.dto.SymptomCorrelationResponse.*;
 import tn.esprit.peakwell.dto.SymptomEntryRequest;
 import tn.esprit.peakwell.dto.SymptomEntryResponse;
 import tn.esprit.peakwell.entities.BiometricEntry;
+import tn.esprit.peakwell.entities.MedicalProfile;
 import tn.esprit.peakwell.entities.SymptomEntry;
 import tn.esprit.peakwell.repositories.BiometricEntryRepository;
+import tn.esprit.peakwell.repositories.MedicalProfileRepository;
 import tn.esprit.peakwell.repositories.SymptomEntryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class SymptomService {
 
   private final SymptomEntryRepository symptomRepo;
   private final BiometricEntryRepository biometricRepo;
+  private final MedicalProfileRepository profileRepository;
 
   // ── CRUD ────────────────────────────────────────
 
@@ -50,6 +53,8 @@ public class SymptomService {
   }
 
   public SymptomEntryResponse addEntry(SymptomEntryRequest request) {
+    MedicalProfile profile = profileRepository.findById(1L)
+      .orElseThrow(() -> new RuntimeException("Medical profile not found. Please create your profile first."));
     SymptomEntry entry = SymptomEntry.builder()
       .logDate(LocalDate.parse(request.getLogDate()))
       .symptom(request.getSymptom())
@@ -58,6 +63,7 @@ public class SymptomService {
       .duration(request.getDuration())
       .notes(request.getNotes())
       .mood(request.getMood())
+      .profile(profile)
       .energyLevel(request.getEnergyLevel())
       .stressLevel(request.getStressLevel())
       .tags(request.getTags() != null ? request.getTags() : new ArrayList<>())
@@ -69,6 +75,7 @@ public class SymptomService {
   public SymptomEntryResponse updateEntry(Long id, SymptomEntryRequest request) {
     SymptomEntry entry = symptomRepo.findById(id)
       .orElseThrow(() -> new RuntimeException("Symptom entry not found"));
+
 
     if (request.getSymptom() != null) entry.setSymptom(request.getSymptom());
     if (request.getSeverity() != null) entry.setSeverity(request.getSeverity());
@@ -93,6 +100,7 @@ public class SymptomService {
   public SymptomCorrelationResponse analyzeCorrelations() {
     List<SymptomEntry> symptoms = symptomRepo.findTop30ByOrderByLogDateDesc();
     List<BiometricEntry> biometrics = biometricRepo.findAllByOrderByRecordedAtAsc();
+
 
     if (symptoms.isEmpty()) {
       return SymptomCorrelationResponse.builder()

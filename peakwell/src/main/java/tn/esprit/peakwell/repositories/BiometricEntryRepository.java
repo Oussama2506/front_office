@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface BiometricEntryRepository extends JpaRepository<BiometricEntry, Long> {
     List<BiometricEntry> findAllByOrderByRecordedAtAsc();
     Optional<BiometricEntry> findTopByOrderByRecordedAtDesc();
+    List<BiometricEntry> findByProfileIdOrderByRecordedAtAsc(Long profileId);
 }
