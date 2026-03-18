@@ -13,7 +13,7 @@ import { AiInsightsComponent } from './components/ai-insights/ai-insights.compon
 import { GoalTrackingComponent } from './components/goal-tracking/goal-tracking.component';
 import { HealthReportComponent } from './components/health-report/health-report.component';
 import { FilterBySeverityPipe } from './pipes/filter-severity.pipe';
-import { SymptomJournalComponent } from './components/symptom-journal/symptom-journal.component';
+import { SmartDiagnosisComponent } from './components/smart-diagnosis/smart-diagnosis.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +27,7 @@ import { SymptomJournalComponent } from './components/symptom-journal/symptom-jo
     GoalTrackingComponent,
     HealthReportComponent,
     FilterBySeverityPipe,
-    SymptomJournalComponent,
+    SmartDiagnosisComponent,
   ],
   imports: [
     CommonModule,

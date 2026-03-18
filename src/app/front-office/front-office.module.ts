@@ -17,6 +17,8 @@ import { NewsletterComponent } from '../components/newsletter/newsletter.compone
 import { FooterComponent } from '../components/footer/footer.component';
 import { ToastComponent } from '../components/toast/toast.component';
 import { RouterModule } from '@angular/router';
+import { LoginComponent } from './pages/auth/login/login.component';
+import { SignupComponent } from './pages/auth/signup/signup.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,8 @@ import { RouterModule } from '@angular/router';
     NewsletterComponent,
     FooterComponent,
     ToastComponent,
+    LoginComponent,
+    SignupComponent,
   ],
   imports: [
     CommonModule,

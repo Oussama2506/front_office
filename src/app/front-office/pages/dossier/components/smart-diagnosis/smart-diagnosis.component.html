@@ -1,0 +1,211 @@
+<div class="diagnosis">
+
+  <div class="empty-dash" *ngIf="!modelLoaded">
+    <div class="empty-dash-icon">🧠</div>
+    <h3>ML Model not loaded</h3>
+    <p>Place <strong>symptom_model.json</strong> in <code>src/main/resources/ml/</code> and restart the backend.</p>
+  </div>
+
+  <div class="diagnosis-content" *ngIf="modelLoaded">
+
+    <!-- ═══════ INPUT FORM ═══════ -->
+    <div class="input-card" *ngIf="!predicted">
+      <div class="input-header">
+        <div class="input-icon-wrap"><span>🧠</span></div>
+        <div>
+          <h3>Smart Symptom Diagnosis</h3>
+          <p>Select one or more symptoms. Our ML model predicts severity for each and computes an overall risk score.</p>
+        </div>
+      </div>
+
+      <div class="ml-badge-row">
+        <span class="ml-badge">🤖 Random Forest</span>
+        <span class="ml-badge">🌳 150 Decision Trees</span>
+        <span class="ml-badge">🎯 76% Accuracy</span>
+        <span class="ml-badge">📈 12K Samples</span>
+        <span class="ml-badge">📊 29 Features</span>
+      </div>
+
+      <!-- Multi-symptom selection -->
+      <div class="form-section">
+        <div class="form-section-label">
+          🩺 What are you experiencing?
+          <span class="selection-count" *ngIf="selectedSymptoms.length > 0">{{ selectedSymptoms.length }} selected</span>
+        </div>
+        <div class="symptom-grid">
+          <button *ngFor="let s of symptoms" class="symptom-btn"
+                  [class.symptom-btn--active]="selectedSymptoms.includes(s)"
+                  (click)="toggleSymptom(s)">
+            {{ s }}
+          </button>
+        </div>
+        <div class="selected-symptoms" *ngIf="selectedSymptoms.length > 0">
+          <span class="selected-tag" *ngFor="let s of selectedSymptoms; let i = index">
+            {{ s }}
+            <button (click)="toggleSymptom(s)">×</button>
+          </span>
+        </div>
+      </div>
+
+      <!-- Wellbeing -->
+      <div class="form-section">
+        <div class="form-section-label">🧠 Your current state</div>
+        <div class="slider-grid">
+          <div class="slider-item">
+            <label>Stress: <strong>{{ scaleLabel(stressLevel) }} ({{ stressLevel }}/5)</strong></label>
+            <input type="range" min="1" max="5" step="1" [(ngModel)]="stressLevel"/>
+          </div>
+          <div class="slider-item">
+            <label>Mood: <strong>{{ moodEmoji(mood) }} ({{ mood }}/5)</strong></label>
+            <input type="range" min="1" max="5" step="1" [(ngModel)]="mood"/>
+          </div>
+          <div class="slider-item">
+            <label>Energy: <strong>{{ scaleLabel(energyLevel) }} ({{ energyLevel }}/5)</strong></label>
+            <input type="range" min="1" max="5" step="1" [(ngModel)]="energyLevel"/>
+          </div>
+          <div class="slider-item">
+            <label>Sleep: <strong>{{ sleepHours }}h</strong></label>
+            <input type="range" min="2.5" max="10.5" step="0.5" [(ngModel)]="sleepHours"/>
+          </div>
+          <div class="slider-item">
+            <label>Water: <strong>{{ waterIntakeMl }}ml</strong></label>
+            <input type="range" min="300" max="4000" step="100" [(ngModel)]="waterIntakeMl"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Health profile -->
+      <div class="form-section">
+        <div class="form-section-label">👤 Your health profile</div>
+        <div class="slider-grid">
+          <div class="slider-item">
+            <label>Age: <strong>{{ age }}</strong></label>
+            <input type="range" min="18" max="75" step="1" [(ngModel)]="age"/>
+          </div>
+          <div class="slider-item">
+            <label>BMI: <strong>{{ bmi }}</strong></label>
+            <input type="range" min="15" max="45" step="0.5" [(ngModel)]="bmi"/>
+          </div>
+          <div class="slider-item">
+            <label>Exercise: <strong>{{ exerciseHoursWeekly }}h/week</strong></label>
+            <input type="range" min="0" max="15" step="0.5" [(ngModel)]="exerciseHoursWeekly"/>
+          </div>
+          <div class="slider-item">
+            <label>Caffeine: <strong>{{ caffeineCupsDaily }} cups/day</strong></label>
+            <input type="range" min="0" max="6" step="1" [(ngModel)]="caffeineCupsDaily"/>
+          </div>
+        </div>
+        <label class="checkbox-row">
+          <input type="checkbox" [(ngModel)]="hasChronicCondition"/>
+          <span>I have a chronic medical condition</span>
+        </label>
+      </div>
+
+      <!-- Time of Day -->
+      <div class="form-section">
+        <div class="form-section-label">🕐 Time of day</div>
+        <div class="time-row">
+          <button *ngFor="let t of timesOfDay" class="time-btn"
+                  [class.time-btn--active]="timeOfDay === t.value" (click)="timeOfDay = t.value">{{ t.label }}</button>
+        </div>
+      </div>
+
+      <!-- Triggers -->
+      <div class="form-section">
+        <div class="form-section-label">⚡ Active triggers</div>
+        <div class="trigger-grid">
+          <button *ngFor="let t of commonTriggers" class="trigger-btn"
+                  [class.trigger-btn--active]="triggers.includes(t)" (click)="toggleTrigger(t)">{{ t }}</button>
+        </div>
+      </div>
+
+      <button class="btn-predict" (click)="predict()" [disabled]="loading || selectedSymptoms.length === 0">
+        {{ loading ? '🔄 Analyzing ' + selectedSymptoms.length + ' symptom(s)…' : '🧠 Predict Severity (' + selectedSymptoms.length + ' symptom' + (selectedSymptoms.length !== 1 ? 's' : '') + ')' }}
+      </button>
+    </div>
+
+    <!-- ═══════ RESULTS ═══════ -->
+    <div class="results" *ngIf="predicted && result">
+
+      <!-- Overall Score -->
+      <div class="overall-card" [style.border-left-color]="severityColor(result.overallSeverity)">
+        <div class="overall-header">
+          <div class="overall-badge" [style.background]="severityColor(result.overallSeverity)">
+            {{ result.overallSeverity }}/5
+          </div>
+          <div class="overall-info">
+            <h3 [style.color]="severityColor(result.overallSeverity)">Overall: {{ result.overallSeverityLabel }}</h3>
+            <span class="overall-sub">{{ result.symptomCount }} symptom{{ result.symptomCount > 1 ? 's' : '' }} analyzed · Avg confidence: {{ result.averageConfidence }}%</span>
+          </div>
+          <div class="overall-stats">
+            <div class="stat-mini">
+              <span class="stat-mini-val">{{ result.averageSeverity }}</span>
+              <span class="stat-mini-label">Avg severity</span>
+            </div>
+            <div class="stat-mini">
+              <span class="stat-mini-val" [style.color]="severityColor(result.worstSeverity)">{{ result.worstSeverity }}/5</span>
+              <span class="stat-mini-label">Worst</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Multi-symptom Warning -->
+      <div class="warning-card" *ngIf="result.multiSymptomWarning">
+        <span>⚠️</span>
+        <p>{{ result.multiSymptomWarning }}</p>
+      </div>
+
+      <!-- Per-symptom Results -->
+      <div class="section-card">
+        <div class="section-title"><span>🩺</span><h4>Per-symptom Predictions</h4></div>
+        <div class="symptom-results">
+          <div class="symptom-result-card" *ngFor="let p of result.predictions"
+               [style.border-left-color]="severityColor(p.predictedSeverity)">
+            <div class="sr-header">
+              <strong>{{ p.symptom }}</strong>
+              <div class="sr-badges">
+                <span class="sr-severity" [style.background]="severityColor(p.predictedSeverity)"
+                >{{ p.severityLabel }}</span>
+                <span class="sr-conf">{{ p.confidence }}%</span>
+              </div>
+            </div>
+            <div class="sr-bars">
+              <div class="sr-bar-row" *ngFor="let prob of getProbEntries(p.probabilities)">
+                <span class="sr-bar-label">{{ prob.label }}</span>
+                <div class="sr-bar-track">
+                  <div class="sr-bar-fill" [style.width.%]="prob.value" [style.background]="prob.color"></div>
+                </div>
+                <span class="sr-bar-val" [style.color]="prob.color">{{ prob.value }}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Risk Factors -->
+      <div class="section-card" *ngIf="result.riskFactors?.length">
+        <div class="section-title"><span>⚠️</span><h4>Contributing Risk Factors</h4></div>
+        <div class="risk-list">
+          <div class="risk-item" *ngFor="let factor of result.riskFactors">
+            <span class="risk-arrow">→</span>
+            <span>{{ factor }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="model-info">
+        <span class="ml-badge">🤖 {{ result.modelType }}</span>
+      </div>
+
+      <div class="result-actions">
+        <button class="btn-retry" (click)="reset()">← Try another prediction</button>
+      </div>
+
+      <div class="disclaimer">
+        <span>ℹ️</span>
+        <p>Predictions generated by an ML model trained on 12,000 synthetic samples (76% accuracy). For educational purposes only. Always consult your healthcare provider.</p>
+      </div>
+    </div>
+  </div>
+</div>

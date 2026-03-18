@@ -21,7 +21,7 @@ tabs = [
   { value: 'insights',     label: '🤖 AI Insights',       show: 'hasEntries' },
   { value: 'goals',        label: '🎯 Goals',             show: 'always'     },
   { value: 'report',       label: '📄 Report',            show: 'hasEntries' },
-  { value: 'symptoms', label: '📓 Symptom Journal', show: 'always' },
+  { value: 'diagnosis', label: '🧠 Smart Diagnosis', show: 'always' },
 ];
 
   constructor(public dossierService: DossierService) {}
